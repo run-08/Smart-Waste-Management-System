@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Quicksand:wght@300..700&display=swap");
-.Dayinfo {
-  position: absolute;
-  display: none;
+
+.body {
+  background-color: rgba(10, 10, 10, 0.983);
 }

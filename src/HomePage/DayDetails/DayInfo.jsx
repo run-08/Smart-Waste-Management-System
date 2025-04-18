@@ -31,14 +31,17 @@ const DayInfo = () => {
     "December",
   ];
   return (
-    <div className={`${DayInfoStyles.body} container-fluid }`}>
+    <div
+      className={`${DayInfoStyles.body} container }`}
+      style={{ width: "  " }}
+    >
       <div className="row daily_info_panel ">
         <div
-          className={`card w-25 bg-dark text-white ${
+          className={`card  col-md-3 bg-dark text-white ${
             display == "none" ? "d-none" : "d-block"
           } `}
         >
-          <div className="card_body py-2">
+          <div className="card_body ">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"

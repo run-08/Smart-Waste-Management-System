@@ -6,8 +6,8 @@
   background-size: cover;
   background-position: center;
   display: inline-block;
-  position: relative;
-  object-fit: contain;
+  height: 900px;
+  /* object-fit: contain; */
 }
 
 .button {

@@ -37,18 +37,20 @@ const Dashboard = () => {
   });
   const generateBoxes = () => {
     let boxes = [];
-    const no_of_boxes = window.innerWidth < 1400 ? 1 : 5;
+    const no_of_boxes = window.innerWidth < 1400 ? 1 : 4;
     for (let i = 0; i < no_of_boxes; i++) {
       boxes.push(
-        <div className="single_box col-2 me-3">
+        <div
+          className={`single_box col-2  ${i == 0 ? "offset-0" : "offset-1"}`}
+        >
           <div
             className={`${DashboardStyles.box} bg-secondary row`}
             style={{
               height: "390px",
-              width: "370px",
+              width: window.innerWidth < 400 ? "290px" : "370px",
               borderRadius: "10px",
               padding: "10px",
-              margin: "20px",
+              margin: "10px",
             }}
           >
             <h1 className="text-center text-white my-1">{month[startMonth]}</h1>
@@ -86,17 +88,18 @@ const Dashboard = () => {
   };
   const [selectedMonth, setSelectedMonth] = useState("Select Specific Month");
   return (
-    <div className={`row mt-5`}>
+    <div className={`row mt-5 `}>
       <div
-        className="month_bars"
+        className="month_bars w-100   "
         style={{
-          opacity: display == "block" ? 0.2 : 1,
+          opacity: display == "block" ? 0.5 : 1,
           transition: "all 1.5s ease-in-out",
+          backgroundColor: "black",
         }}
       >
-        <div className={`month_dropdown dropdown offset-9`}>
+        <div className={`month_dropdown dropdown offset-10 ml-1 `}>
           <button
-            className="btn dropdown-toggle-split dropdown-toggle px-5 w-75 fw-bold"
+            className="btn dropdown-toggle-split text-wrap  dropdown-toggle  w-sm-100 w-md-25 fw-bold"
             data-bs-toggle="dropdown"
             onMouseMove={(e) => {
               (e.target.style.backgroundColor = "#bbb"),
@@ -137,19 +140,18 @@ const Dashboard = () => {
               );
             })}
           </ul>
-          <div className="bars mt-5">
+          <div className="bars ">
             <div className="bar row"></div>
           </div>
         </div>
-        <div className="bars mt-5 h-auto ">
-          <div className="row mt-5  d-flex justify-content-around align-items-center ">
-            {generateBoxes()}
-          </div>
+        <div className="bars mt-5  ">
+          <div className="row mt-5">{generateBoxes()}</div>
         </div>
       </div>
-      <DayInfo className={`${DashboardStyles.Dayinfo}`}></DayInfo>
+
       <div className="today_details"></div>
       <div className="past_details"></div>
+      <DayInfo></DayInfo>
     </div>
   );
 };

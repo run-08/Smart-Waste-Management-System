@@ -55,7 +55,6 @@ const Inputs = () => {
         `http://localhost:1001/getUser?email=${email}`
       );
       const data = await response.json();
-      console.log(data);
       if (data != null) {
         setIsAuthenticated(false);
         alert("user Already Exists");
@@ -92,7 +91,8 @@ const Inputs = () => {
   const navigate = useNavigate();
   const [isValid, setIsValid] = useState(true);
   const [formErrorMessage, setFormErrorMessage] = useState(null);
-  const whereFrom = useLocation();
+  const whereFrom = useLocation()?.state?.path || "/signup";
+
   const validate = (event) => {
     event.preventDefault();
     const { name, password, confirmPassword, email } = form;
@@ -144,7 +144,10 @@ const Inputs = () => {
       )}
       <form action="" onSubmit={validate} key="form">
         <div className="form-container">
-          <div className="form-group signin py-2">
+          <div
+            className="form-group signin py-2"
+            style={{ display: whereFrom === "/signin" ? "none" : "block" }}
+          >
             <label htmlFor="userName" className="form-label h6">
               Name
             </label>
@@ -189,7 +192,10 @@ const Inputs = () => {
                 : null}
             </small>
           </div>
-          <div className="form-group py-2">
+          <div
+            className="form-group py-2"
+            style={{ display: whereFrom === "/signin" ? "none" : "block" }}
+          >
             <label htmlFor="password" className="form-label h6">
               Confirm Password
             </label>

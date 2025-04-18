@@ -1,0 +1,59 @@
+.body {
+  padding: 0px;
+  margin: 0px;
+  background: url("https://static.wixstatic.com/media/e85cf7_d76a71fd5a4441e3989d2a2e47e7d550~mv2.png/v1/fill/w_1599,h_900,al_c/e85cf7_d76a71fd5a4441e3989d2a2e47e7d550~mv2.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  display: inline-block;
+  position: relative;
+  object-fit: contain;
+}
+
+.button {
+  cursor: pointer;
+  background-color: #660099;
+  color: white;
+  margin: 20px;
+  font-weight: 600;
+  background: radial-gradient(rgb(220, 51, 211) 30%, blue);
+  transition: background-color 2s ease-in-out;
+}
+
+.button:hover {
+  background: radial-gradient(blue 0%, rgb(220, 51, 211));
+  color: white;
+}
+.login_body {
+  opacity: 0.95;
+  background-color: aliceblue;
+  position: relative;
+}
+.input {
+  border: 1px solid transparent;
+  font-size: large;
+}
+.input:is(:focus) {
+  border-bottom: 2px solid black;
+}
+.flowBox {
+  position: absolute;
+  animation: FlowBottomToTop 5s infinite linear;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  opacity: 0.9;
+  transition: transform 2s;
+}
+
+@keyframes FlowBottomToTop {
+  0% {
+    transform: translateY(600px);
+  }
+  100% {
+    transform: translateY(-800px);
+  }
+}

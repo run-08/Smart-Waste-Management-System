@@ -1,0 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Quicksand:wght@300..700&display=swap");
+.body {
+  font-family: Inconsolata;
+  position: absolute;
+  margin-top: 120px;
+  margin-left: 900px;
+  transform: scale(1.2);
+  transition: all ease-in-out;
+}

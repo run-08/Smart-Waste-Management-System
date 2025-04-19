@@ -4,6 +4,7 @@ import { useRoutes } from "react-router-dom";
 import "./App.css";
 import Map from "./GoogleMap/Map";
 import SWMSHomepage from "./HomePage/SWMSHome";
+import Camera from "./ImageUploadPanel/Camera";
 import RootPath from "./RootSWMS/RootPath";
 import SignupPage from "./Signup/singnUppage";
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
     <>
       <div className={`container-fluid `}>
         <SWMSRoute></SWMSRoute>
+        <Camera></Camera>
       </div>
     </>
   );

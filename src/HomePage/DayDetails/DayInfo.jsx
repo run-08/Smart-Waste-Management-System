@@ -31,13 +31,13 @@ const DayInfo = () => {
     "December",
   ];
   return (
-    <div
-      className={`${DayInfoStyles.body} container }`}
-      style={{ width: "  " }}
-    >
-      <div className="row daily_info_panel ">
+    <div className={`${DayInfoStyles.body} container }`}>
+      <div
+        className="row daily_info_panel "
+        style={{ marginLeft: window.innerWidth < 500 ? "0px" : "700px" }}
+      >
         <div
-          className={`card  col-md-3 bg-dark text-white ${
+          className={`card  col-md-5  bg-dark text-white ${
             display == "none" ? "d-none" : "d-block"
           } `}
         >

@@ -31,8 +31,17 @@ const SignupPage = () => {
     generateBox();
   }, []);
   return (
-    <div className={`container-fluid my-5 mx-5 ${SignUpstyles.body} `}>
-      <div className="row cols-1 my-5 ">
+    <div className={`container-fluid my-5 mx-5`}>
+      <div
+        className="row cols-1 my-5 px-5"
+        style={{
+          background: `url("https://static.wixstatic.com/media/e85cf7_d76a71fd5a4441e3989d2a2e47e7d550~mv2.png/v1/fill/w_1599,h_900,al_c/e85cf7_d76a71fd5a4441e3989d2a2e47e7d550~mv2.png")`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "100vh",
+        }}
+      >
         <div className="col-sm-5 offset-3 my-5 ">
           <div ref={containerRef} className="flowbox_container"></div>
           <div className={`card my-5 ${SignUpstyles.login_body}`}>

@@ -212,7 +212,10 @@ const Inputs = () => {
           <div className="form-group d-block  mx-5  text-center ">
             <button
               type="submit"
-              className={`btn px-5 mt-3 mb-0  ${SignupStyles.button}`}
+              className={`btn  mt-3  mb-0  ${SignupStyles.button}`}
+              style={{
+                marginLeft: window.innerWidth < 400 ? "-40px" : "0px",
+              }}
             >
               Submit
             </button>

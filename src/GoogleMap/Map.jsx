@@ -5,184 +5,196 @@ import {
   LoadScript,
   Marker,
 } from "@react-google-maps/api";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const Map = () => {
-  const apiKey = "AIzaSyBLz5KhOZZQi8I5_tbmVscOPN5H3mkRu_I";
-  const [center, setCenter] = useState({
-    lat: 13.0827,
-    lng: 80.2707,
-  });
-  const [selectedStation, setSelectedStation] = useState(null);
-  const [destination, setDestination] = useState("");
-  const [destinationCoords, setDestinationCoords] = useState(null);
+const libraries = ["places", "directions"];
+
+const MapComponent = () => {
+  const [markers, setMarkers] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [destinationInput, setDestinationInput] = useState("");
+  const [destination, setDestination] = useState(null);
   const [directions, setDirections] = useState(null);
-  const [distance, setDistance] = useState(null);
-  const [fuelStations, setFuelStations] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
 
-  const mapContainerStyle = {
-    width: "80%",
-    height: "880px",
+  const fetchPlaces = (map) => {
+    const placeService = new google.maps.places.PlacesService(map);
+    const request = {
+      location: map.getCenter(),
+      radius: 50000,
+      type: ["restaurant", "hotel", "gas_station", "bus_station", "park"],
+    };
+    placeService.nearbySearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        const newMarkers = results.map((place) => ({
+          id: place.place_id,
+          position: place.geometry.location,
+          name: place.name,
+          type: place.types[0],
+        }));
+        setMarkers(newMarkers);
+      }
+    });
+  };
+
+  const onMapLoad = (map) => {
+    fetchPlaces(map);
+  };
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error("Error getting location: ", error);
+        }
+      );
+    }
   };
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const { latitude, longitude } = pos.coords;
-        setCenter({ lat: latitude, lng: longitude });
-      });
-    }
+    getCurrentLocation();
   }, []);
 
-  const handleDestination = async (e) => {
-    e.preventDefault();
-    if (!destination) return;
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          destination
-        )}&key=${apiKey}`
-      );
-      const data = await response.json();
-      if (data?.results && data.results.length > 0) {
-        const location = data?.results[0].geometry.location;
-        setDestinationCoords(location);
-        const directionsService = new window.google.maps.DirectionsService();
-        directionsService.route(
-          {
-            origin: center,
-            destination: location,
-            travelMode: window.google.maps.TravelMode.DRIVING,
-          },
-          (result, status) => {
-            if (status === "OK") {
-              setDirections(result);
-              const routes = result?.routes[0];
-              if (routes && routes.legs.length > 0) {
-                const leg = routes.legs[0];
-                setDistance(leg.distance.text);
-                const midPointLat =
-                  (leg.start_location.lat() + leg.end_location.lat()) / 2;
-                const midPointLng =
-                  (leg.start_location.lng() + leg.end_location.lng()) / 2;
-                const service = new window.google.maps.places.PlacesService(
-                  document.createElement("div")
-                );
-                service.nearbySearch(
-                  {
-                    location: { lat: midPointLat, lng: midPointLng },
-                    radius: 10000,
-                    type: "gas_station",
-                  },
-                  (results, status) => {
-                    if (
-                      status == window.google.maps.places.PlacesServiceStatus.OK
-                    ) {
-                      setFuelStations(results);
-                    } else {
-                      ``;
-                      console.log(
-                        "Failed to Fetch The Gas Stations : ",
-                        status
-                      );
-                    }
-                  }
-                );
-              }
-            } else {
-              console.error("Directions request failed due to " + status);
-            }
-          }
-        );
+  const handleDestinationChange = (e) => {
+    setDestinationInput(e.target.value);
+  };
+
+  const geocodeDestination = (address, callback) => {
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ address }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        const location = results[0].geometry.location;
+        callback({
+          lat: location.lat(),
+          lng: location.lng(),
+        });
       } else {
-        alert("No location found!");
+        console.error("Geocode failed:", status);
       }
-    } catch (e) {
-      console.log("An Unknown Error Occurred!" + e);
-      alert("Unknown Error Occurred!");
-    }
+    });
+  };
+
+  const findOptimizedPath = () => {
+    if (!currentLocation || !destinationInput) return;
+
+    geocodeDestination(destinationInput, (destinationLatLng) => {
+      const directionsService = new google.maps.DirectionsService();
+      const request = {
+        origin: currentLocation,
+        destination: destinationLatLng,
+        travelMode: google.maps.TravelMode.DRIVING,
+      };
+      directionsService.route(request, (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          setDirections(result);
+        } else {
+          console.error("Error fetching directions:", status);
+        }
+      });
+
+      setDestination(destinationLatLng);
+    });
   };
 
   return (
-    <div className="google_map row mt-5 py-5">
-      <div className="destinationPlace">
-        <label htmlFor="destination " className="display-6 fw-bold px-3">
-          Destination:{" "}
-        </label>
+    <LoadScript
+      googleMapsApiKey="AIzaSyBLz5KhOZZQi8I5_tbmVscOPN5H3mkRu_I"
+      libraries={libraries}
+    >
+      <div>
         <input
-          id="destination"
           type="text"
-          placeholder="Enter Your destination"
-          className="form-control w-25 px-3 my-4 fw-bold"
-          onChange={(e) => {
-            setDestination(e?.target.value.trim());
+          value={destinationInput}
+          onChange={handleDestinationChange}
+          className="mx-5 my-5 form-control d-inline fw-bold text-primary"
+          placeholder="Enter a destination"
+          style={{
+            width: window.innerWidth <= 420 ? "200px" : "500px",
+            marginLeft: window.innerWidth <= 420 ? "20px" : "0px",
           }}
         />
         <button
-          className="btn btn-outline-info"
-          onClick={(e) => handleDestination(e)}
+          onClick={findOptimizedPath}
+          className="btn btn-primary fw-bold me-auto"
+          style={{
+            marginTop: window.innerWidth <= 420 ? "-50px" : "",
+            marginLeft: window.innerWidth <= 420 ? "40px" : "",
+          }}
         >
-          <span className="h5">Go</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill="black"
-            className="mx-2"
-          >
-            <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z" />
-          </svg>
+          Find Route
         </button>
-        <h1 className="display-6">Distance : {distance}</h1>
       </div>
-      <div className="col-8 offset-3 text-center px-5 ml-5">
-        <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            zoom={11}
-            center={center}
+
+      <GoogleMap
+        id="map"
+        mapContainerStyle={{
+          width: `100vw`,
+          height: "100vh",
+        }}
+        zoom={14}
+        center={currentLocation || { lat: 12.9716, lng: 77.5946 }}
+        onLoad={onMapLoad}
+      >
+        {markers.map((marker) => (
+          <Marker
+            key={marker.id}
+            position={marker.position}
+            onClick={() => setSelected(marker)}
+            icon={{
+              url:
+                marker.type === "restaurant"
+                  ? "http://maps.google.com/mapfiles/ms/icons/restaurant.png"
+                  : marker.type === "hotel"
+                  ? "http://maps.google.com/mapfiles/ms/icons/hotel.png"
+                  : marker.type === "gas_station"
+                  ? "http://maps.google.com/mapfiles/ms/icons/gasstation.png"
+                  : marker.type === "bus_station"
+                  ? "http://maps.google.com/mapfiles/ms/icons/bus.png"
+                  : marker.type === "park"
+                  ? "http://maps.google.com/mapfiles/ms/icons/park.png"
+                  : "http://maps.google.com/mapfiles/ms/icons/default.png",
+            }}
+          />
+        ))}
+
+        {selected && (
+          <InfoWindow
+            position={selected.position}
+            onCloseClick={() => setSelected(null)}
           >
-            <Marker position={center}></Marker>
-            {destinationCoords && <Marker position={destinationCoords} />}
-            {directions && <DirectionsRenderer directions={directions} />}
-            {fuelStations != null &&
-              fuelStations.map((station, idx) => (
-                <Marker
-                  key={idx}
-                  position={{
-                    lat: station.geometry.location.lat(),
-                    lng: station.geometry.location.lng(),
-                  }}
-                  icon={{
-                    url: "http://maps.google.com/mapfiles/ms/icons/gas.png",
-                  }}
-                  title={station.name}
-                  onClick={() => setSelectedStation(station)}
-                />
-              ))}
-            {selectedStation && (
-              <InfoWindow
-                position={{
-                  lat: selectedStation.geometry.location.lat(),
-                  lng: selectedStation.geometry.location.lng(),
-                }}
-                onCloseClick={() => setSelectedStation(null)}
-              >
-                <div>
-                  <h6>{selectedStation.name}</h6>
-                  <p>{selectedStation.vicinity || "No address available"}</p>
-                  {selectedStation.rating && (
-                    <p>Rating: {selectedStation.rating} ⭐</p>
-                  )}
-                </div>
-              </InfoWindow>
-            )}
-          </GoogleMap>
-        </LoadScript>
-      </div>
-    </div>
+            <div>
+              <h3>{selected.name}</h3>
+              <p>Type: {selected.type}</p>
+            </div>
+          </InfoWindow>
+        )}
+
+        {currentLocation && (
+          <Marker
+            position={currentLocation}
+            icon={{
+              url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+            }}
+          />
+        )}
+
+        {destination && (
+          <Marker
+            position={destination}
+            icon={{
+              url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+            }}
+          />
+        )}
+
+        {directions && <DirectionsRenderer directions={directions} />}
+      </GoogleMap>
+    </LoadScript>
   );
 };
 
-export default Map;
+export default MapComponent;

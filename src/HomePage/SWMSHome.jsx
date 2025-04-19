@@ -246,8 +246,8 @@ const SWMSHomepage = () => {
           </h1>
         </div>
       </div>
-      <div className="dashboard  py-5  ">
-        <Dashboard className="mt-5 w-100"></Dashboard>
+      <div className="dashboard   ">
+        <Dashboard></Dashboard>
       </div>
 
       {isAuthenticated ? null : (

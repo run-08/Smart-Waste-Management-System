@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AuthenticationVerify from "../AuthenticationZustand";
+
 import DashboardStyles from "../Dashboard/dashboard.module.css";
 import DayInfo from "../DayDetails/DayInfo";
 import DayMonth from "../DayDetails/ZustandDayMonth";
@@ -20,7 +20,7 @@ const Dashboard = () => {
     "December",
   ];
   const { setDay, setMonth, display, setDisplay } = DayMonth();
-  const { isAuthenticated } = AuthenticationVerify();
+
   const [monthNumber, setMonthNumber] = useState({
     0: 31,
     1: new Date().getFullYear() % 4 != 0 ? 28 : 29,
@@ -148,7 +148,6 @@ const Dashboard = () => {
           <div className="row mt-5">{generateBoxes()}</div>
         </div>
       </div>
-
       <div className="today_details"></div>
       <div className="past_details"></div>
       <DayInfo></DayInfo>

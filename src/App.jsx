@@ -12,7 +12,6 @@ const App = () => {
     <>
       <div className={`container-fluid `}>
         <SWMSRoute></SWMSRoute>
-        <Camera></Camera>
       </div>
     </>
   );
@@ -35,6 +34,10 @@ const SWMSRoute = () => {
         {
           path: "/map",
           element: <Map></Map>,
+        },
+        {
+          path: "/camera",
+          element: <Camera></Camera>,
         },
       ],
     },

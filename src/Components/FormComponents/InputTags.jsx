@@ -1,35 +1,8 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Authentication from "../../HomePage/AuthenticationZustand";
+import { useNavigate } from "react-router-dom";
 import SignupStyles from "../../Signup/signuppage.module.css";
+import userDetails from "../../Signup/UserDetails";
 const Inputs = () => {
-  const decrypt = (password) => {
-    let decryptedPassword = "";
-    for (let i = 0; i < password.length; i += 2) {
-      if (
-        password.charCodeAt(i + 1) >= 97 &&
-        password.charCodeAt(i + 1) <= 122
-      ) {
-        let char =
-          password.charAt(i + 1) == "a"
-            ? "z"
-            : "" + String.fromCharCode(password.charCodeAt(i + 1) - 1);
-        decryptedPassword += char;
-      } else if (
-        password.charCodeAt(i + 1) >= 65 &&
-        password.charCodeAt(i + 1) <= 91
-      ) {
-        let char =
-          password.charAt(i + 1) == "A"
-            ? "Z"
-            : "" + String.fromCharCode(password.charCodeAt(i + 1) - 1);
-        decryptedPassword += +char;
-      } else {
-        decryptedPassword += password.charAt(i + 2);
-        i++;
-      }
-    }
-  };
   const encrypt = (password) => {
     let encryptedPassword = "";
     for (let i = 0; i < password.length; i++) {
@@ -49,14 +22,41 @@ const Inputs = () => {
     }
     return encryptedPassword;
   };
-  const storeInDB = async (email, password, name) => {
+  const { isSignUpPage, isLoginPage, setIsAuthorized } = userDetails();
+
+  const reteriveDB = async (email, password) => {
+    try {
+      const response = await fetch(
+        `http://localhost:1001/getUser?email=${email}`
+      );
+      const data = await response.json();
+      if (data == null) {
+        alert("User doesn't exists!");
+        setIsAuthorized(false);
+        return;
+      } else {
+        let encryptedPassword = encrypt(password);
+        if (encryptedPassword != data?.user?.password) {
+          console.log(encryptedPassword);
+          alert("Password is Incorrect !");
+          setIsAuthorized(false);
+          return;
+        }
+        setIsAuthorized(true);
+        navigate("/HomePage");
+      }
+    } catch (e) {
+      console.log("It is The Error in Login fetching Details ");
+    }
+  };
+  const storeInDB = async (email, password, name, mode) => {
     try {
       const response = await fetch(
         `http://localhost:1001/getUser?email=${email}`
       );
       const data = await response.json();
       if (data != null) {
-        setIsAuthenticated(false);
+        setIsAuthorized(true);
         alert("user Already Exists");
         return;
       } else {
@@ -70,9 +70,10 @@ const Inputs = () => {
             email: email,
             password: password,
             name: name,
+            mode: mode,
           }),
         });
-        setIsAuthenticated(true);
+        setIsAuthorized(true);
         alert("Registered Successfully");
         navigate("/homePage");
       }
@@ -86,16 +87,15 @@ const Inputs = () => {
     email: "aru701567@gmail.com",
     password: "Arunda95!",
     confirmPassword: "Arunda95!",
+    mode: "publicUser",
   });
-  const { isAuthenticated, setIsAuthenticated } = Authentication();
+
   const navigate = useNavigate();
   const [isValid, setIsValid] = useState(true);
   const [formErrorMessage, setFormErrorMessage] = useState(null);
-  const whereFrom = useLocation()?.state?.path || "/signup";
-
   const validate = (event) => {
     event.preventDefault();
-    const { name, password, confirmPassword, email } = form;
+    const { name, password, confirmPassword, email, mode } = form;
     if (name === null || name === undefined || name.trim() === "") {
       alert("InValid name");
       return;
@@ -120,7 +120,12 @@ const Inputs = () => {
       alert("password is Invalid");
       return;
     }
-    storeInDB(email, password, name);
+    if (mode === undefined || mode === null) {
+      alert("Select Any Mode!");
+      return;
+    }
+    if (isSignUpPage) storeInDB(email, password, name, mode);
+    else reteriveDB(email, password);
   };
   const Form = [
     <>
@@ -144,21 +149,23 @@ const Inputs = () => {
       )}
       <form action="" onSubmit={validate} key="form">
         <div className="form-container">
-          <div
-            className="form-group signin py-2"
-            style={{ display: whereFrom === "/signin" ? "none" : "block" }}
-          >
-            <label htmlFor="userName" className="form-label h6">
-              Name
-            </label>
-            <input
-              type="text"
-              className={`form-control ${SignupStyles.input}`}
-              placeholder="Enter Your Name"
-              value={form?.name || ""}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
-          </div>
+          {isSignUpPage && (
+            <div
+              className="form-group signin py-2"
+              style={{ display: "block" }}
+            >
+              <label htmlFor="userName" className="form-label h6">
+                Name
+              </label>
+              <input
+                type="text"
+                className={`form-control ${SignupStyles.input}`}
+                placeholder="Enter Your Name"
+                value={form?.name || ""}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+            </div>
+          )}
           <div className="from-group signin py-2 h6">
             <label htmlFor="email" className="form-label">
               Email
@@ -192,22 +199,47 @@ const Inputs = () => {
                 : null}
             </small>
           </div>
-          <div
-            className="form-group py-2"
-            style={{ display: whereFrom === "/signin" ? "none" : "block" }}
-          >
-            <label htmlFor="password" className="form-label h6">
-              Confirm Password
+          {isSignUpPage && (
+            <div className="form-group py-2" style={{ display: "block" }}>
+              <label htmlFor="password" className="form-label h6">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                placeholder="Enter final  Password"
+                className="form-control"
+                value={form.confirmPassword || ""}
+                onChange={(e) =>
+                  setForm({ ...form, confirmPassword: e.target.value })
+                }
+              />
+            </div>
+          )}
+          <div className="form-group py-2">
+            <label htmlFor="UserMode" className="form-check-label h6">
+              Mode{" "}
             </label>
-            <input
-              type="password"
-              placeholder="Enter final  Password"
-              className="form-control"
-              value={form.confirmPassword || ""}
-              onChange={(e) =>
-                setForm({ ...form, confirmPassword: e.target.value })
-              }
-            />
+            <select name="usermode" className="form-select text-bold h6">
+              <option
+                value="publicUser"
+                className="text-white h5 text-bold bg-secondary"
+              >
+                Public User
+              </option>
+              <option
+                value="municipalities"
+                className="text-white h5 text-bold bg-secondary"
+              >
+                Municipalities
+              </option>
+              <option
+                value="investors"
+                className="text-white h5 text-bold bg-secondary"
+                onClick={(e) => setForm({ ...form, mode: e.target.value })}
+              >
+                Investor
+              </option>
+            </select>
           </div>
           <div className="form-group d-block  mx-5  text-center ">
             <button
@@ -222,7 +254,6 @@ const Inputs = () => {
           </div>
         </div>
       </form>
-      ,
     </>,
   ];
   return Form;

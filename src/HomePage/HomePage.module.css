@@ -6,7 +6,7 @@
   color: black;
   font-size: larger;
   text-align: center;
-  width: auto;
+  width: 100vw;
   min-height: 100px;
   height: 650px;
   z-index: 1;

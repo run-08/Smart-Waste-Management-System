@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeStyles from "../HomePage/HomePage.module.css";
 import userDetails from "../Signup/UserDetails";
-import Authentication from "./AuthenticationZustand";
 import Dashboard from "./Dashboard/dashboard";
 const SWMSHomepage = () => {
-  const { name, email, password } = userDetails();
-  const { setName, setEmail, setPassword } = userDetails();
-  const { isAuthenticated, setIsAuthenticated } = Authentication();
+  const { setIsSignUpPage, setIsLoginPage, isAuthorized, setIsAuthorized } =
+    userDetails();
+  console.log(setIsLoginPage);
   const navigate = useNavigate();
   const [quicksignup_btn, setQuicksignup_btn] = useState("white");
   const encrypt = (password) => {
@@ -37,7 +36,7 @@ const SWMSHomepage = () => {
       const data = await response.json();
       console.log(data);
       if (data != null) {
-        setIsAuthenticated(false);
+        setIsAuthorized(false);
         alert("user Already Exists");
         return;
       } else {
@@ -53,7 +52,8 @@ const SWMSHomepage = () => {
             name: name,
           }),
         });
-        setIsAuthenticated(true);
+
+        setIsAuthorized(true);
         alert("Registered Successfully");
       }
       const result = await response1.text;
@@ -118,28 +118,48 @@ const SWMSHomepage = () => {
           <div className="navbar-collapse collapse" id="nav-content">
             <div className="d-flex flex-lg-row-reverse flex-sm-column   col-sm-12 navbar-nav">
               <hr className={`mt-3 text-dark`} />
-              <li className="nav-item list-unstyled ">
-                <button
-                  className="btn btn-outline-primary border-primary me-5 px-4 mt-sm-3"
-                  type="button"
-                  onClick={() => {
-                    navigate("/signUp", { state: { path: "/signup" } });
-                  }}
-                >
-                  Touch with us
-                </button>
-              </li>
-              <li className="nav-item list-unstyled">
-                <button
-                  className="btn btn-outline-success border-success me-5 px-4 mt-sm-3"
-                  type="button"
-                  onClick={() => {
-                    navigate("/signUp", { state: { path: "/signin" } });
-                  }}
-                >
-                  Sign in
-                </button>
-              </li>
+              {!isAuthorized && (
+                <li className="nav-item list-unstyled ">
+                  <button
+                    className="btn btn-outline-primary border-primary me-5 px-4 mt-sm-3"
+                    type="button"
+                    onClick={() => {
+                      setIsSignUpPage();
+                      navigate("/signUp");
+                    }}
+                  >
+                    Touch with us
+                  </button>
+                </li>
+              )}
+              {!isAuthorized && (
+                <li className="nav-item list-unstyled">
+                  <button
+                    className="btn btn-outline-success border-success me-5 px-4 mt-sm-3"
+                    type="button"
+                    onClick={() => {
+                      setIsLoginPage();
+                      navigate("/signUp");
+                    }}
+                  >
+                    Sign in
+                  </button>
+                </li>
+              )}
+              {isAuthorized && (
+                <li className="nav-item list-unstyled ">
+                  <button
+                    className="btn btn-outline-danger border-danger me-5 px-4 mt-sm-3"
+                    type="button"
+                    onClick={() => {
+                      setIsSignUpPage();
+                      navigate("/signUp");
+                    }}
+                  >
+                    Logout
+                  </button>
+                </li>
+              )}
               <li className="nav-item list-unstyled me-5  mt-3 py-sm-2">
                 <a
                   href="#"
@@ -233,6 +253,31 @@ const SWMSHomepage = () => {
                   Map
                 </a>
               </li>
+              <li className="nav-item list-unstyled me-5 mt-3 py-sm-2">
+                <a
+                  href="#"
+                  className="nav-links h5 "
+                  onMouseOver={(e) => {
+                    e.target.style.color = "white";
+                    e.target.style.textDecorationColor = "black";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = "black";
+                    e.target.style.textDecorationColor = "white";
+                  }}
+                  style={{
+                    textDecoration: "underline",
+                    transition:
+                      "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
+                    textUnderlineOffset: "5px",
+                  }}
+                  onClick={() => {
+                    navigate("/Camera");
+                  }}
+                >
+                  Camera
+                </a>
+              </li>
             </div>
           </div>
         </div>
@@ -250,7 +295,7 @@ const SWMSHomepage = () => {
         <Dashboard></Dashboard>
       </div>
 
-      {isAuthenticated ? null : (
+      {isAuthorized ? null : (
         <div
           className={`card offset-3 w-50 mt-5 border-white bg-success z-3 ${
             display === "none" ? "d-none" : "d-block"

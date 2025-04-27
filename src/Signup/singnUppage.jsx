@@ -2,10 +2,12 @@ import { useEffect, useRef } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import InputTags from "../Components/FormComponents/InputTags";
 import SignUpstyles from "./signuppage.module.css";
+import userDetails from "./UserDetails";
 const SignupPage = () => {
   const location = useLocation();
   const containerRef = useRef(null);
   const FormComponets = <InputTags></InputTags>;
+  const { isSignUpPage } = userDetails();
   const generateBox = () => {
     setInterval(() => {
       if (!containerRef.current) return;
@@ -46,7 +48,9 @@ const SignupPage = () => {
           <div ref={containerRef} className="flowbox_container"></div>
           <div className={`card my-5 ${SignUpstyles.login_body}`}>
             <div className="card-header">
-              <h4 className="text-center ">Register Your Account </h4>
+              <h4 className="text-center ">
+                {isSignUpPage ? "Register" : "Login into"} Your Account
+              </h4>
             </div>
             <div className="card-body ">
               {FormComponets ? (

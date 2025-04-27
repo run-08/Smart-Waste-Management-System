@@ -10,7 +10,7 @@ const Camera = () => {
     const cameraStart = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
+          // audio: true,
           video: true,
         });
         videoRef.current.srcObject = stream;
@@ -31,12 +31,13 @@ const Camera = () => {
   const captureImage = () => {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
+    // both are same component or object (canvas , context)
     const video = videoRef.current;
     if (video) {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      //   based encodie 64
+      //   based encode 64
       const capturedImage = canvas.toDataURL("image/jpeg", 1.0);
       setImage(capturedImage);
     }

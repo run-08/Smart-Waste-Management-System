@@ -1,22 +1,29 @@
 import { create } from "zustand";
 const userDetails = create((set) => ({
-  name: null,
-  password: null,
-  email: null,
-  setName: (name) =>
+  isAuthorized: false,
+  isSignUpPage: true,
+  isLoginPage: false,
+  setIsAuthorized: (flagAuthorization) =>
     set((state) => ({
       ...state,
-      name: name,
+      isAuthorized: flagAuthorization === true,
     })),
-  setPassword: (password) =>
+  setIsLoginPage: () =>
     set((state) => ({
       ...state,
-      password: password,
+      isLoginPage: true,
+      isSignUpPage: false,
     })),
-  setEmail: (email) =>
+  setIsSignUpPage: () =>
     set((state) => ({
       ...state,
-      email: email,
+      isSignUpPage: true,
+      isLoginPage: false,
+    })),
+  setIsAuthorized: (flag) =>
+    set((state) => ({
+      ...state,
+      isAuthorized: flag,
     })),
 }));
 export default userDetails;

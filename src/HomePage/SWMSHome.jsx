@@ -98,7 +98,10 @@ const SWMSHomepage = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg bg-secondary-subtle mt-1 ">
+      <nav
+        className="navbar navbar-expand-lg bg-secondary-subtle mt-1 "
+        style={{ width: "100vw" }}
+      >
         <div className="container-fluid">
           <span
             href="#"
@@ -214,10 +217,10 @@ const SWMSHomepage = () => {
                 </a>
               </li>
               {isInvestor && (
-                <li className="nav-item list-unstyled me-5  mt-3 py-sm-2">
+                <li className="nav-item list-unstyled me-5  mt-3   h5">
                   <a
                     href="#"
-                    className="nav-links  h5 "
+                    className="nav-link  h5 "
                     onMouseOver={(e) => {
                       (e.target.style.textDecoration = "underline"),
                         (e.target.style.color = "aliceblue  "),
@@ -298,11 +301,19 @@ const SWMSHomepage = () => {
       </nav>
       <div className={`${HomeStyles.mainContent} `}>
         <div className="row ">
-          <h1
-            className={`text-center p-5 my-5 fs-1 ${HomeStyles.headingAnime}`}
+          <div
+            className={`  ${HomeStyles.headingAnime} px-5 `}
+            style={{
+              height: "100vh",
+              overflow: "auto",
+            }}
           >
-            Welcome to Smart Waste Management System
-          </h1>
+            <div className="d-flex align-items-center justify-content-center my-5 py-5">
+              <h1 className={`my-5 py-5 ${HomeStyles.heading}`}>
+                Welcome to Smart Waste Management System
+              </h1>
+            </div>
+          </div>
         </div>
       </div>
       {isInvestor && (

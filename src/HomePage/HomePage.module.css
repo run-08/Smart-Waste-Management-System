@@ -2,20 +2,41 @@
 
 .mainContent {
   font-family: "Inconsolata";
-  position: relative;
   color: black;
   font-size: larger;
   text-align: center;
-  width: 100vw;
   min-height: 100px;
   height: 650px;
-  z-index: 1;
   background-image: url("https://sensoneo.com/wp-content/uploads/2023/08/Untitled-design-3-e1691055036819.jpg");
   background-size: cover;
   background-position: center;
 }
 .headingAnime {
-  color: black;
-  font-size: 100px;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.heading {
+  transform: scale(1.8);
   font-family: Inconsolata;
+  font-style: italic;
+  color: white;
+  font-weight: bold;
+  text-shadow: 2px 0px 20px rgba(8, 254, 65, 0.922);
+  animation: showSlow 5s infinite ease-in-out;
+}
+@keyframes showSlow {
+  0% {
+    width: 200px;
+  }
+  25% {
+    width: 500px;
+  }
+  50% {
+    width: 700px;
+  }
+  70% {
+    width: 1000px;
+  }
+  100% {
+    width: 1300px;
+  }
 }

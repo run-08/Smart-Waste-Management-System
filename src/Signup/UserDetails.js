@@ -4,7 +4,7 @@ const userDetails = create((set) => ({
   isSignUpPage: true,
   isLoginPage: false,
   isPublicUser: true,
-  isInvestor: false,
+  isInvestor: true,
   isMunicipalities: false,
   setIsPublicUser: () =>
     set((state) => ({

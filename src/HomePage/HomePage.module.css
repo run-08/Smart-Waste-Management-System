@@ -20,8 +20,12 @@
   font-style: italic;
   color: white;
   font-weight: bold;
-  text-shadow: 2px 0px 20px rgba(8, 254, 65, 0.922);
+  text-shadow: 2px 1px 20px rgba(8, 254, 65, 0.922);
   animation: showSlow 5s infinite ease-in-out;
+}
+.heading::selection {
+  background-color: #000100ba;
+  color: rgb(13, 200, 13);
 }
 @keyframes showSlow {
   0% {

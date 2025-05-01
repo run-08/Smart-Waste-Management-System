@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CommonFormData from "../CommonDetails/CommonFormData";
 import HomeStyles from "../HomePage/HomePage.module.css";
 import userDetails from "../Signup/UserDetails";
 import Dashboard from "./Dashboard/dashboard";
@@ -13,8 +14,11 @@ const SWMSHomepage = () => {
     isMunicipalities,
     isInvestor,
   } = userDetails();
-  console.log(isPublicUser + " " + isInvestor + " " + isMunicipalities);
+
   const navigate = useNavigate();
+  const { setCustomerPage, setDashboardPage, isDashboardPage, isCustomerPage } =
+    CommonFormData();
+
   const [quicksignup_btn, setQuicksignup_btn] = useState("white");
 
   const encrypt = (password) => {
@@ -171,7 +175,11 @@ const SWMSHomepage = () => {
                   </button>
                 </li>
               )}
-              <li className="nav-item list-unstyled me-5  mt-3 py-sm-2">
+              <li
+                className={`nav-item list-unstyled me-5  mt-3 py-sm-2 ${
+                  isCustomerPage ? "active" : ""
+                } `}
+              >
                 <a
                   href="#"
                   className="nav-links  h5 "
@@ -189,6 +197,9 @@ const SWMSHomepage = () => {
                     transition:
                       "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
                     textUnderlineOffset: "5px",
+                  }}
+                  onClick={() => {
+                    setCustomerPage();
                   }}
                 >
                   Customers
@@ -217,7 +228,11 @@ const SWMSHomepage = () => {
                 </a>
               </li>
               {isInvestor && (
-                <li className="nav-item list-unstyled me-5  mt-3   h5">
+                <li
+                  className={`nav-item list-unstyled me-5  mt-3  h5 ${
+                    isDashboardPage ? "active" : ""
+                  } `}
+                >
                   <a
                     href="#"
                     className="nav-link  h5 "
@@ -235,6 +250,9 @@ const SWMSHomepage = () => {
                       transition:
                         "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
                       textUnderlineOffset: "5px",
+                    }}
+                    onClick={() => {
+                      setDashboardPage();
                     }}
                   >
                     Dashboard

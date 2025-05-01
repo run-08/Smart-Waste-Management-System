@@ -22,7 +22,14 @@ const Inputs = () => {
     }
     return encryptedPassword;
   };
-  const { isSignUpPage, isLoginPage, setIsAuthorized } = userDetails();
+  const {
+    isSignUpPage,
+    isLoginPage,
+    setIsAuthorized,
+    setIsPublicUser,
+    setIsMunicipalities,
+    setIsInvestor,
+  } = userDetails();
 
   const reteriveDB = async (email, password) => {
     try {
@@ -42,6 +49,11 @@ const Inputs = () => {
           setIsAuthorized(false);
           return;
         }
+        const mode = data?.user?.mode;
+        console.log(mode);
+        if (mode === "publicUser") setIsPublicUser();
+        else if (mode === "Investor") setIsInvestor();
+        else setIsMunicipalities();
         setIsAuthorized(true);
         navigate("/HomePage");
       }
@@ -73,6 +85,9 @@ const Inputs = () => {
             mode: mode,
           }),
         });
+        if (mode === "PublicUser") setIsPublicUser();
+        else if (mode === "Investor") setIsInvestor();
+        else setIsMunicipalities();
         setIsAuthorized(true);
         alert("Registered Successfully");
         navigate("/homePage");

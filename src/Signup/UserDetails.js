@@ -3,6 +3,30 @@ const userDetails = create((set) => ({
   isAuthorized: false,
   isSignUpPage: true,
   isLoginPage: false,
+  isPublicUser: true,
+  isInvestor: false,
+  isMunicipalities: false,
+  setIsPublicUser: () =>
+    set((state) => ({
+      ...state,
+      isPublicUser: true,
+      isMunicipalities: false,
+      isInvestor: false,
+    })),
+  setIsMunicipalities: () =>
+    set((state) => ({
+      ...state,
+      isMunicipalities: true,
+      isPublicUser: false,
+      isInvestor: false,
+    })),
+  setIsInvestor: () =>
+    set((state) => ({
+      ...state,
+      isInvestor: true,
+      isMunicipalities: false,
+      isPublicUser: false,
+    })),
   setIsAuthorized: (flagAuthorization) =>
     set((state) => ({
       ...state,

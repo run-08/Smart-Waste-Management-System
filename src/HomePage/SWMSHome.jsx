@@ -4,11 +4,19 @@ import HomeStyles from "../HomePage/HomePage.module.css";
 import userDetails from "../Signup/UserDetails";
 import Dashboard from "./Dashboard/dashboard";
 const SWMSHomepage = () => {
-  const { setIsSignUpPage, setIsLoginPage, isAuthorized, setIsAuthorized } =
-    userDetails();
-  console.log(setIsLoginPage);
+  const {
+    setIsSignUpPage,
+    setIsLoginPage,
+    isAuthorized,
+    setIsAuthorized,
+    isPublicUser,
+    isMunicipalities,
+    isInvestor,
+  } = userDetails();
+  console.log(isPublicUser + " " + isInvestor + " " + isMunicipalities);
   const navigate = useNavigate();
   const [quicksignup_btn, setQuicksignup_btn] = useState("white");
+
   const encrypt = (password) => {
     let encryptedPassword = "";
     for (let i = 0; i < password.length; i++) {
@@ -205,79 +213,85 @@ const SWMSHomepage = () => {
                   About us
                 </a>
               </li>
-              <li className="nav-item list-unstyled me-5  mt-3 py-sm-2">
-                <a
-                  href="#"
-                  className="nav-links  h5 "
-                  onMouseOver={(e) => {
-                    (e.target.style.textDecoration = "underline"),
-                      (e.target.style.color = "aliceblue  "),
-                      (e.target.style.textDecorationColor = "black");
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = "black";
-                    e.target.style.textDecorationColor = "white";
-                  }}
-                  style={{
-                    textDecoration: "underline",
-                    transition:
-                      "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
-                    textUnderlineOffset: "5px",
-                  }}
-                >
-                  Dashboard
-                </a>
-              </li>
-              <li className="nav-item list-unstyled me-5 mt-3 py-sm-2">
-                <a
-                  href="#"
-                  className="nav-links h5 "
-                  onMouseOver={(e) => {
-                    e.target.style.color = "white";
-                    e.target.style.textDecorationColor = "black";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = "black";
-                    e.target.style.textDecorationColor = "white";
-                  }}
-                  style={{
-                    textDecoration: "underline",
-                    transition:
-                      "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
-                    textUnderlineOffset: "5px",
-                  }}
-                  onClick={() => {
-                    navigate("/Map");
-                  }}
-                >
-                  Map
-                </a>
-              </li>
-              <li className="nav-item list-unstyled me-5 mt-3 py-sm-2">
-                <a
-                  href="#"
-                  className="nav-links h5 "
-                  onMouseOver={(e) => {
-                    e.target.style.color = "white";
-                    e.target.style.textDecorationColor = "black";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = "black";
-                    e.target.style.textDecorationColor = "white";
-                  }}
-                  style={{
-                    textDecoration: "underline",
-                    transition:
-                      "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
-                    textUnderlineOffset: "5px",
-                  }}
-                  onClick={() => {
-                    navigate("/Camera");
-                  }}
-                >
-                  Camera
-                </a>
-              </li>
+              {isInvestor && (
+                <li className="nav-item list-unstyled me-5  mt-3 py-sm-2">
+                  <a
+                    href="#"
+                    className="nav-links  h5 "
+                    onMouseOver={(e) => {
+                      (e.target.style.textDecoration = "underline"),
+                        (e.target.style.color = "aliceblue  "),
+                        (e.target.style.textDecorationColor = "black");
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = "black";
+                      e.target.style.textDecorationColor = "white";
+                    }}
+                    style={{
+                      textDecoration: "underline",
+                      transition:
+                        "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
+                      textUnderlineOffset: "5px",
+                    }}
+                  >
+                    Dashboard
+                  </a>
+                </li>
+              )}
+              {(isMunicipalities || isPublicUser) && (
+                <li className="nav-item list-unstyled me-5 mt-3 py-sm-2">
+                  <a
+                    href="#"
+                    className="nav-links h5 "
+                    onMouseOver={(e) => {
+                      e.target.style.color = "white";
+                      e.target.style.textDecorationColor = "black";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = "black";
+                      e.target.style.textDecorationColor = "white";
+                    }}
+                    style={{
+                      textDecoration: "underline",
+                      transition:
+                        "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
+                      textUnderlineOffset: "5px",
+                    }}
+                    onClick={() => {
+                      navigate("/Map");
+                    }}
+                  >
+                    Map
+                  </a>
+                </li>
+              )}
+              {(isMunicipalities || isPublicUser) && (
+                <li className="nav-item list-unstyled me-5 mt-3 py-sm-2">
+                  <a
+                    href="#"
+                    className="nav-links h5 "
+                    onMouseOver={(e) => {
+                      e.target.style.color = "white";
+                      e.target.style.textDecorationColor = "black";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = "black";
+                      e.target.style.textDecorationColor = "white";
+                    }}
+                    style={{
+                      textDecoration: "underline",
+                      transition:
+                        "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
+                      textUnderlineOffset: "5px",
+                    }}
+                    onClick={() => {
+                      navigate("/Camera");
+                    }}
+                  >
+                    Camera
+                  </a>
+                </li>
+              )}
             </div>
           </div>
         </div>
@@ -291,9 +305,11 @@ const SWMSHomepage = () => {
           </h1>
         </div>
       </div>
-      <div className="dashboard   ">
-        <Dashboard></Dashboard>
-      </div>
+      {isInvestor && (
+        <div className="dashboard   ">
+          <Dashboard></Dashboard>
+        </div>
+      )}
 
       {isAuthorized ? null : (
         <div

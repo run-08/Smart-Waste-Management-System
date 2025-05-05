@@ -42,6 +42,8 @@ const App = () => {
             maxWidth: "500px",
             border: "2px solid green",
             borderRadius: "10px",
+            overflowY: "auto",
+            maxHeight: "400px",
           }}
         >
           <div
@@ -59,12 +61,12 @@ const App = () => {
               background: "#f5f5f5",
             }}
           >
-            <div className="bot_message float-start col-12 my-1">
+            <div className="bot_message float-start col-12 my-1  ">
               {"Hello , I am The SWMS ChatBot"}
               <hr />
             </div>
 
-            <div className="user_message float-end ">
+            <div className="user_message float-end my-1">
               {"I am the user , I have a One Query?"}
             </div>
           </div>

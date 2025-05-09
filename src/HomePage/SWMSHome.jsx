@@ -104,7 +104,7 @@ const SWMSHomepage = () => {
     <div>
       <nav
         className="navbar navbar-expand-lg bg-secondary-subtle mt-1 "
-        style={{ width: "100vw" }}
+        style={{ width: "99vw" }}
       >
         <div className="container-fluid">
           <span

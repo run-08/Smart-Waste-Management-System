@@ -2,3 +2,6 @@
 .sendBtn:hover {
   border: 1px solid green;
 }
+.msgBox::placeholder {
+  color: rgb(0, 128, 0);
+}

@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { useState } from "react";
 import { useRoutes } from "react-router-dom";
 import Appstyle from "./App.module.css";
 import Map from "./GoogleMap/Map";
@@ -7,7 +8,57 @@ import SWMSHomepage from "./HomePage/SWMSHome";
 import Camera from "./ImageUploadPanel/Camera";
 import RootPath from "./RootSWMS/RootPath";
 import SignupPage from "./Signup/singnUppage";
+
 const App = () => {
+  const [conversationCount, setConversationCount] = useState(3);
+  const [showChatMessage, setShowChatMessgae] = useState(false);
+  const [messages, setMessages] = useState({
+    1: ["Hello , I am Your SWMS Bot , How can I assist You", "bot"],
+    2: [
+      "Hello , SWMS Bot , I have an Query about bins pickup time and location",
+      "user",
+    ],
+  });
+  const [userQuery, setUserQuery] = useState();
+
+  const handleMessage = async () => {
+    setConversationCount(conversationCount + 1);
+    setMessages((state) => ({
+      ...state,
+      [conversationCount]: [userQuery, "user"],
+    }));
+    try {
+      const response = await fetch(
+        "https://dialogflowchatbot-459118.el.r.appspot.com/APIservice/sendToDialogFlow",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: userQuery }),
+        }
+      );
+      const result = await response.text();
+      setConversationCount(conversationCount + 1);
+      setMessages((state) => ({
+        ...state,
+        [conversationCount]: [result, "bot"],
+      }));
+      console.log();
+    } catch (e) {
+      console.log("Error : " + e);
+      setConversationCount(conversationCount + 1);
+      setConversationCount(conversationCount + 1);
+      setMessages((state) => ({
+        ...state,
+        [conversationCount]: [
+          "Sorry, something went wrong. Please try again.",
+          "bot",
+        ],
+      }));
+    }
+    setUserQuery("");
+  };
   return (
     <>
       <div className={`container-fluid bg-light`}>
@@ -20,6 +71,11 @@ const App = () => {
             width: "70px",
             backgroundColor: "#b7cd9d",
           }}
+          onClick={(e) => {
+            setShowChatMessgae(() => {
+              return showChatMessage ? false : true;
+            });
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -27,76 +83,99 @@ const App = () => {
             viewBox="-100 -960 11100 960"
             width="294px"
             fill="green"
-            // style={{ cursor: "pointer", width: "200px" }}
           >
             <path d="M440-120v-80h320v-284q0-117-81.5-198.5T480-764q-117 0-198.5 81.5T200-484v244h-40q-33 0-56.5-23.5T80-320v-80q0-21 10.5-39.5T120-469l3-53q8-68 39.5-126t79-101q47.5-43 109-67T480-840q68 0 129 24t109 66.5Q766-707 797-649t40 126l3 52q19 9 29.5 27t10.5 38v92q0 20-10.5 38T840-249v49q0 33-23.5 56.5T760-120H440Zm-80-280q-17 0-28.5-11.5T320-440q0-17 11.5-28.5T360-480q17 0 28.5 11.5T400-440q0 17-11.5 28.5T360-400Zm240 0q-17 0-28.5-11.5T560-440q0-17 11.5-28.5T600-480q17 0 28.5 11.5T640-440q0 17-11.5 28.5T600-400Zm-359-62q-7-106 64-182t177-76q89 0 156.5 56.5T720-519q-91-1-167.5-49T435-698q-16 80-67.5 142.5T241-462Z" />
           </svg>
         </button>
 
-        <div
-          className="chat-container float-end my-5"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            maxWidth: "500px",
-            border: "2px solid green",
-            borderRadius: "10px",
-            overflowY: "auto",
-            maxHeight: "400px",
-          }}
-        >
+        {showChatMessage && (
           <div
-            className="chat-header text-center fst-italic fs-4  fw-bold text-white bg-success"
-            style={{ borderRadius: "5px" }}
-          >
-            SWMS Chatbot
-          </div>
-          <div
-            className="chat-body"
+            className="chat-container float-end my-5"
             style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              maxWidth: "500px",
+              border: "2px solid green",
+              borderRadius: "10px",
               overflowY: "auto",
-              flex: "1",
-              padding: "10px",
-              background: "#f5f5f5",
+              maxHeight: "400px",
             }}
           >
-            <div className="bot_message float-start col-12 my-1  ">
-              {"Hello , I am The SWMS ChatBot"}
-              <hr />
+            <div
+              className="chat-header text-center fst-italic fs-4  fw-bold text-white bg-success"
+              style={{ borderRadius: "5px" }}
+            >
+              SWMS Chatbot
             </div>
-
-            <div className="user_message float-end my-1">
-              {"I am the user , I have a One Query?"}
-            </div>
-          </div>
-          <div className="input mx-2 mt-5 d-flex ">
-            <input
-              type="text"
-              className="form-control my-3 fs-5"
-              placeholder="Enter a message . . ."
-            />
-            <button
-              className={`btn mt-2 mx-1 ${Appstyle.sendBtn}`}
+            <div
+              className="chat-body"
               style={{
-                borderRadius: "50px",
-                width: "50px",
-                height: "50px",
+                overflowY: "auto",
+                flex: "1",
+                padding: "10px",
+                background: "#f5f5f5",
               }}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="24px"
-                viewBox="450 -960 960 960"
-                width="50px"
-                fill="green"
-                style={{ cursor: "pointer" }}
+              {Object.entries(messages)?.map(([key, message]) => {
+                return message[1] === "bot" ? (
+                  <>
+                    <div
+                      className="bot_message float-start col-12 my-3 fs-4 fst-italic px-2 rounded-3 w-75"
+                      style={{ backgroundColor: "#66c166", color: "white" }}
+                    >
+                      <p className="float-end my-3 ">{message[0]}</p>
+                    </div>
+                    <hr className="w-100 h-100 text-success " />
+                  </>
+                ) : (
+                  <>
+                    <div className="user_message float-end my-3 px-3 text-white bg-success rounded-3 w-75  fs-4">
+                      <p className="float-end my-3">{message[0]}</p>
+                    </div>
+                    <hr className="w-100 h-100 text-success  " />
+                  </>
+                );
+              })}
+            </div>
+            <div className="input mx-2  d-flex ">
+              <input
+                type="text"
+                className={`form-control my-3 fs-5 ${Appstyle.msgBox}`}
+                placeholder="Enter a message . . ."
+                value={userQuery}
+                onChange={(e) => {
+                  setUserQuery(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleMessage();
+                  }
+                }}
+              />
+              <button
+                className={`btn mx-1 my-3 ${Appstyle.sendBtn}`}
+                style={{
+                  borderRadius: "50px",
+                  width: "50px",
+                  height: "50px",
+                }}
+                onClick={handleMessage}
               >
-                <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="450 -960 960 960"
+                  width="50px"
+                  fill="green"
+                  style={{ cursor: "pointer" }}
+                >
+                  <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
@@ -129,3 +208,10 @@ const SWMSRoute = () => {
   ]);
   return routes;
 };
+//
+// billing permission
+// Get a bucket storage instance as a storage object admin
+// then need to generate a service account key
+// and then need to download the json file
+// and then need to set the env variable in the terminal
+// export GOOGLE_APPLICATION_CREDENTIALS="/path-to-your-service-account-file.json"

@@ -33,7 +33,7 @@ const SignupPage = () => {
     generateBox();
   }, []);
   return (
-    <div className={`container-fluid my-5 mx-5`}>
+    <div className={`container-fluid my-1 mx-5`}>
       <div
         className="row cols-1 my-5 px-5"
         style={{
@@ -46,6 +46,22 @@ const SignupPage = () => {
       >
         <div className="col-sm-5 offset-3 my-5 ">
           <div ref={containerRef} className="flowbox_container"></div>
+          {location?.state?.flag && (
+            <div className="d-flex justify-content-center ">
+              <div
+                className="alert alert-danger w-50  alert-dismissible"
+                role="alert"
+              >
+                <p className=" text-center alert-link my-2 mx-3">
+                  Register First{" "}
+                </p>
+                <button
+                  className="btn-close my-2 mx-2"
+                  data-bs-dismiss="alert"
+                ></button>
+              </div>
+            </div>
+          )}
           <div className={`card my-5 ${SignUpstyles.login_body}`}>
             <div className="card-header">
               <h4 className="text-center ">

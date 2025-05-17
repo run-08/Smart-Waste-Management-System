@@ -64,6 +64,7 @@ const SWMSHomepage = () => {
             name: name,
           }),
         });
+
         setIsAuthorized(true);
         alert("Registered Successfully");
       }
@@ -96,7 +97,7 @@ const SWMSHomepage = () => {
           brand_name.style.color =
             brand_colors[Math.floor(Math.random() * color_length)];
       }
-    }, 100);
+    }, 2000);
   }, []);
 
   return (
@@ -140,6 +141,7 @@ const SWMSHomepage = () => {
                     onClick={() => {
                       setIsSignUpPage();
                       navigate("/signUp");
+                      return;
                     }}
                   >
                     Touch with us
@@ -154,6 +156,7 @@ const SWMSHomepage = () => {
                     onClick={() => {
                       setIsLoginPage();
                       navigate("/signUp");
+                      return;
                     }}
                   >
                     Sign in
@@ -166,8 +169,7 @@ const SWMSHomepage = () => {
                     className="btn btn-outline-danger border-danger me-5 px-4 mt-sm-3"
                     type="button"
                     onClick={() => {
-                      setIsLoginPage();
-                      setIsAuthorized(false);
+                      setIsSignUpPage();
                       navigate("/signUp");
                     }}
                   >
@@ -199,6 +201,10 @@ const SWMSHomepage = () => {
                     textUnderlineOffset: "5px",
                   }}
                   onClick={() => {
+                    if (!isAuthorized) {
+                      navigate("/signUp", { state: { flag: true } });
+                      return;
+                    }
                     setCustomerPage();
                   }}
                 >
@@ -222,6 +228,12 @@ const SWMSHomepage = () => {
                     transition:
                       "color 0.5s ease-in-out , text-decoration-color 2s ease-in-out  ",
                     textUnderlineOffset: "5px",
+                  }}
+                  onClick={() => {
+                    if (!isAuthorized) {
+                      navigate("/signUp", { state: { flag: true } });
+                      return;
+                    }
                   }}
                 >
                   About us
@@ -252,6 +264,10 @@ const SWMSHomepage = () => {
                       textUnderlineOffset: "5px",
                     }}
                     onClick={() => {
+                      if (!isAuthorized) {
+                        navigate("/signUp", { state: { flag: true } });
+                        return;
+                      }
                       setDashboardPage();
                     }}
                   >
@@ -279,6 +295,10 @@ const SWMSHomepage = () => {
                       textUnderlineOffset: "5px",
                     }}
                     onClick={() => {
+                      if (!isAuthorized) {
+                        navigate("/signUp", { state: { flag: true } });
+                        return;
+                      }
                       navigate("/Map");
                     }}
                   >
@@ -306,6 +326,10 @@ const SWMSHomepage = () => {
                       textUnderlineOffset: "5px",
                     }}
                     onClick={() => {
+                      if (!isAuthorized) {
+                        navigate("/signUp", { state: { flag: true } });
+                        return;
+                      }
                       navigate("/Camera");
                     }}
                   >

@@ -64,7 +64,6 @@ const SWMSHomepage = () => {
             name: name,
           }),
         });
-
         setIsAuthorized(true);
         alert("Registered Successfully");
       }
@@ -167,7 +166,8 @@ const SWMSHomepage = () => {
                     className="btn btn-outline-danger border-danger me-5 px-4 mt-sm-3"
                     type="button"
                     onClick={() => {
-                      setIsSignUpPage();
+                      setIsLoginPage();
+                      setIsAuthorized(false);
                       navigate("/signUp");
                     }}
                   >

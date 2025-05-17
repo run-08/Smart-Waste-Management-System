@@ -32,6 +32,7 @@ const Inputs = () => {
   } = userDetails();
 
   const reteriveDB = async (email, password) => {
+    const session = localStorage.getItem("date");
     try {
       const response = await fetch(
         `http://localhost:1001/getUser?email=${email}`
@@ -55,6 +56,9 @@ const Inputs = () => {
         else if (mode === "Investor") setIsInvestor();
         else setIsMunicipalities();
         setIsAuthorized(true);
+        alert("Registration Successfull");
+        localStorage.setItem("date", new Date().getDate());
+        localStorage.setItem("visited", 1);
         navigate("/HomePage");
       }
     } catch (e) {

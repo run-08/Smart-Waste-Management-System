@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRoutes } from "react-router-dom";
 import Appstyle from "./App.module.css";
 import Map from "./GoogleMap/Map";
@@ -8,11 +8,28 @@ import SWMSHomepage from "./HomePage/SWMSHome";
 import Camera from "./ImageUploadPanel/Camera";
 import RootPath from "./RootSWMS/RootPath";
 import SignupPage from "./Signup/singnUppage";
+import userDetails from "./Signup/UserDetails";
 
 const App = () => {
   const [conversationCount, setConversationCount] = useState(2);
   const [showChatMessage, setShowChatMessgae] = useState(false);
   const [isFull, setIsFull] = useState(false);
+  const { setIsAuthorized } = userDetails();
+
+  const alerVisitedCount = () => {
+    setIsAuthorized(true);
+    const cnt = localStorage.getItem("visited");
+    var visited = cnt === null || cnt === undefined ? 1 : parseInt(cnt);
+    alert(`Welcome to The Page , for ${visited + 1} times `);
+    console.log(` visited : ${visited + 1}`);
+    localStorage.setItem("visited", visited + 1);
+  };
+  useEffect(() => {
+    if (localStorage.getItem("date") - new Date().getDate() == 0) {
+      alerVisitedCount();
+    }
+  }, []);
+
   const [messages, setMessages] = useState([
     { bot: "Hello , I am Your SWMS Bot , How can I assist You" },
   ]);

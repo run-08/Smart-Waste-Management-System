@@ -8,6 +8,8 @@ const SignupPage = () => {
   const containerRef = useRef(null);
   const FormComponets = <InputTags></InputTags>;
   const { isSignUpPage } = userDetails();
+  console.log(location.state);
+
   const generateBox = () => {
     setInterval(() => {
       if (!containerRef.current) return;

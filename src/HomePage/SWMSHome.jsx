@@ -169,7 +169,7 @@ const SWMSHomepage = () => {
                     className="btn btn-outline-danger border-danger me-5 px-4 mt-sm-3"
                     type="button"
                     onClick={() => {
-                      setIsSignUpPage();
+                      setIsLoginPage();
                       navigate("/signUp");
                     }}
                   >
@@ -202,6 +202,7 @@ const SWMSHomepage = () => {
                   }}
                   onClick={() => {
                     if (!isAuthorized) {
+                      setIsLoginPage();
                       navigate("/signUp", { state: { flag: true } });
                       return;
                     }
@@ -231,6 +232,7 @@ const SWMSHomepage = () => {
                   }}
                   onClick={() => {
                     if (!isAuthorized) {
+                      setIsLoginPage();
                       navigate("/signUp", { state: { flag: true } });
                       return;
                     }
@@ -265,6 +267,7 @@ const SWMSHomepage = () => {
                     }}
                     onClick={() => {
                       if (!isAuthorized) {
+                        setIsLoginPage();
                         navigate("/signUp", { state: { flag: true } });
                         return;
                       }
@@ -296,6 +299,7 @@ const SWMSHomepage = () => {
                     }}
                     onClick={() => {
                       if (!isAuthorized) {
+                        setIsLoginPage();
                         navigate("/signUp", { state: { flag: true } });
                         return;
                       }
@@ -327,6 +331,7 @@ const SWMSHomepage = () => {
                     }}
                     onClick={() => {
                       if (!isAuthorized) {
+                        setIsLoginPage();
                         navigate("/signUp", { state: { flag: true } });
                         return;
                       }

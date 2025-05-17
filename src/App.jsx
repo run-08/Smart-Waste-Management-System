@@ -10,24 +10,18 @@ import RootPath from "./RootSWMS/RootPath";
 import SignupPage from "./Signup/singnUppage";
 
 const App = () => {
-  const [conversationCount, setConversationCount] = useState(3);
+  const [conversationCount, setConversationCount] = useState(2);
   const [showChatMessage, setShowChatMessgae] = useState(false);
-  const [messages, setMessages] = useState({
-    1: ["Hello , I am Your SWMS Bot , How can I assist You", "bot"],
-    2: [
-      "Hello , SWMS Bot , I have an Query about bins pickup time and location",
-      "user",
-    ],
-  });
+  const [isFull, setIsFull] = useState(false);
+  const [messages, setMessages] = useState([
+    { bot: "Hello , I am Your SWMS Bot , How can I assist You" },
+  ]);
   const [userQuery, setUserQuery] = useState();
-
   const handleMessage = async () => {
-    setConversationCount(conversationCount + 1);
-    setMessages((state) => ({
-      ...state,
-      [conversationCount]: [userQuery, "user"],
-    }));
+    setMessages((message) => [...message, { user: userQuery }]);
+    setUserQuery("");
     try {
+      const msg = `${userQuery}`;
       const response = await fetch(
         "https://dialogflowchatbot-459118.el.r.appspot.com/APIservice/sendToDialogFlow",
         {
@@ -35,29 +29,18 @@ const App = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ message: userQuery }),
+          body: JSON.stringify({ message: msg }),
         }
       );
       const result = await response.text();
-      setConversationCount(conversationCount + 1);
-      setMessages((state) => ({
-        ...state,
-        [conversationCount]: [result, "bot"],
-      }));
-      console.log();
+      setMessages((message) => [...message, { bot: result }]);
     } catch (e) {
       console.log("Error : " + e);
-      setConversationCount(conversationCount + 1);
-      setConversationCount(conversationCount + 1);
-      setMessages((state) => ({
-        ...state,
-        [conversationCount]: [
-          "Sorry, something went wrong. Please try again.",
-          "bot",
-        ],
-      }));
+      setMessages((message) => [
+        ...message,
+        { bot: "Something went Wrong , please try Again" },
+      ]);
     }
-    setUserQuery("");
   };
   return (
     <>
@@ -95,7 +78,7 @@ const App = () => {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-              maxWidth: "500px",
+              maxWidth: `${isFull ? "1900" : "600"}px`,
               border: "2px solid green",
               borderRadius: "10px",
               overflowY: "auto",
@@ -103,10 +86,47 @@ const App = () => {
             }}
           >
             <div
-              className="chat-header text-center fst-italic fs-4  fw-bold text-white bg-success"
-              style={{ borderRadius: "5px" }}
+              className="chat-header text-center fst-italic fs-4 pt-3 fw-bold text-white bg-success"
+              style={{
+                borderRadius: "5px",
+              }}
             >
               SWMS Chatbot
+              <span>
+                {!isFull ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 -960 960 960"
+                    width="24px"
+                    className="float-end mx-2"
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    fill="#e3e3e3"
+                    onClick={() => {
+                      setIsFull(!isFull);
+                    }}
+                  >
+                    <path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 -960 960 960"
+                    width="24px"
+                    className="float-end mx-2"
+                    fill="#e3e3e3"
+                    onClick={() => setIsFull(!isFull)}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    <path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z" />
+                  </svg>
+                )}
+              </span>
             </div>
             <div
               className="chat-body"
@@ -118,20 +138,20 @@ const App = () => {
               }}
             >
               {Object.entries(messages)?.map(([key, message]) => {
-                return message[1] === "bot" ? (
+                return Object.keys(message)[0] === "bot" ? (
                   <>
                     <div
                       className="bot_message float-start col-12 my-3 fs-4 fst-italic px-2 rounded-3 w-75"
                       style={{ backgroundColor: "#66c166", color: "white" }}
                     >
-                      <p className="float-end my-3 ">{message[0]}</p>
+                      <p className=" px-3 my-3 ">{message.bot}</p>
                     </div>
                     <hr className="w-100 h-100 text-success " />
                   </>
                 ) : (
                   <>
                     <div className="user_message float-end my-3 px-3 text-white bg-success rounded-3 w-75  fs-4">
-                      <p className="float-end my-3">{message[0]}</p>
+                      <p className="float-end my-3">{message.user}</p>
                     </div>
                     <hr className="w-100 h-100 text-success  " />
                   </>

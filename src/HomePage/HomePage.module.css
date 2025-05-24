@@ -44,3 +44,9 @@
     width: 1300px;
   }
 }
+.aboutus_page {
+  font-family: "Inconsolata";
+}
+.aboutus_page::selection {
+  background-color: transparent;
+}

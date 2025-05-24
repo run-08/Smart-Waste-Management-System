@@ -20,7 +20,7 @@ const App = () => {
     setIsAuthorized(true);
     const cnt = localStorage.getItem("visited");
     var visited = cnt === null || cnt === undefined ? 1 : parseInt(cnt);
-    alert(`Welcome to The Page , for ${visited + 1} times `);
+    alert(`Thanking you for revisiting ${visited + 1} times `);
     console.log(` visited : ${visited + 1}`);
     localStorage.setItem("visited", visited + 1);
   };
@@ -116,7 +116,7 @@ const App = () => {
                     height="24px"
                     viewBox="0 -960 960 960"
                     width="24px"
-                    className="float-end mx-2"
+                    className={`float-end mx-2 ${Appstyle.expand}`}
                     style={{
                       cursor: "pointer",
                     }}
@@ -133,7 +133,7 @@ const App = () => {
                     height="24px"
                     viewBox="0 -960 960 960"
                     width="24px"
-                    className="float-end mx-2"
+                    className={`float-end mx-2 ${Appstyle.shrink}`}
                     fill="#e3e3e3"
                     onClick={() => setIsFull(!isFull)}
                     style={{
